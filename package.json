@@ -1,0 +1,33 @@
+{
+  "name": "organizador-windows",
+  "version": "0.1.0",
+  "description": "Smart File Organizer for Windows",
+  "main": "dist/electron/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build && electron-builder",
+    "electron:dev": "vite"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.0.0",
+    "lucide-vue-next": "^0.400.0",
+    "pinia": "^2.1.7",
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
+    "electron": "^29.1.5",
+    "electron-builder": "^24.13.3",
+    "electron-rebuild": "^3.2.9",
+    "tsx": "^4.21.0",
+    "typescript": "^5.4.2",
+    "vite": "^5.1.6",
+    "vite-plugin-electron": "^0.29.1",
+    "vite-plugin-electron-renderer": "^0.14.6",
+    "vue-tsc": "^2.0.6",
+    "wait-on": "^9.0.4"
+  }
+}
