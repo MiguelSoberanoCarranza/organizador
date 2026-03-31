@@ -4,7 +4,7 @@
       <header class="top-bar glass-header">
         <div class="header-left">
           <div class="logo">
-            Organizer <span>v0.0.1 Beta</span>
+            Organizer <span>v0.0.2 Beta</span>
             <router-link to="/updates" class="update-icon-top tooltip-container" title="Buscar Actualizaciones">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.92-10.27l-3.26-1.5"></path><line x1="21.5" y1="8" x2="16" y2="8"></line></svg>
             </router-link>

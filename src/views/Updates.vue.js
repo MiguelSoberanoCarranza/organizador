@@ -11,7 +11,7 @@ const checkForUpdates = async () => {
         await window.electronAPI.checkUpdates();
     }
     catch (err) {
-        statusData.value = { type: 'error', text: 'Error al buscar', error: err.message };
+        statusData.value = { type: 'error', text: 'Error al buscar', error: formatErrorMessage(err) };
         isProcessing.value = false;
     }
 };
@@ -23,7 +23,7 @@ const downloadUpdate = async () => {
         await window.electronAPI.downloadUpdate();
     }
     catch (err) {
-        statusData.value = { type: 'error', text: 'Error al descargar', error: err.message };
+        statusData.value = { type: 'error', text: 'Error al descargar', error: formatErrorMessage(err) };
         isProcessing.value = false;
     }
 };
@@ -31,6 +31,20 @@ const installUpdate = () => {
     isProcessing.value = true;
     // @ts-ignore
     window.electronAPI.installUpdate();
+};
+const formatErrorMessage = (err) => {
+    if (!err)
+        return '';
+    const msg = typeof err === 'string' ? err : (err.message || JSON.stringify(err));
+    if (msg.includes('404'))
+        return 'No se encontró el archivo latest.yml o el instalador en GitHub. Verifica que estén subidos a la versión correcta.';
+    if (msg.includes('No published versions'))
+        return 'Aún no hay ninguna versión (Release) publicada en tu repositorio de GitHub.';
+    if (msg.includes('app is not packed'))
+        return 'Estás en modo desarrollo. Las actualizaciones solo funcionan en la versión instalada de la aplicación.';
+    if (msg.includes('HttpError'))
+        return 'Ocurrió un problema de red al intentar conectar con GitHub. Verifica tu conexión.';
+    return msg.length > 150 ? msg.substring(0, 150) + '...' : msg;
 };
 onMounted(async () => {
     // @ts-ignore
@@ -42,12 +56,16 @@ onMounted(async () => {
     if (window.electronAPI && window.electronAPI.onUpdaterMessage) {
         // @ts-ignore
         window.electronAPI.onUpdaterMessage((event, data) => {
-            statusData.value = { ...statusData.value, ...data };
+            const cleanedData = { ...data };
+            if (cleanedData.error) {
+                cleanedData.error = formatErrorMessage(cleanedData.error);
+            }
+            statusData.value = { ...statusData.value, ...cleanedData };
             if (['not-available', 'error', 'downloaded'].includes(data.type)) {
                 isProcessing.value = false;
             }
             if (data.type === 'available') {
-                isProcessing.value = false; // Permite dar click a descargar
+                isProcessing.value = false;
             }
         });
     }

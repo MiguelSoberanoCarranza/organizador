@@ -68,7 +68,7 @@ const checkForUpdates = async () => {
     // @ts-ignore
     await window.electronAPI.checkUpdates();
   } catch (err) {
-    statusData.value = { type: 'error', text: 'Error al buscar', error: err.message };
+    statusData.value = { type: 'error', text: 'Error al buscar', error: formatErrorMessage(err) };
     isProcessing.value = false;
   }
 };
@@ -80,7 +80,7 @@ const downloadUpdate = async () => {
     // @ts-ignore
     await window.electronAPI.downloadUpdate();
   } catch (err) {
-    statusData.value = { type: 'error', text: 'Error al descargar', error: err.message };
+    statusData.value = { type: 'error', text: 'Error al descargar', error: formatErrorMessage(err) };
     isProcessing.value = false;
   }
 };
@@ -89,6 +89,18 @@ const installUpdate = () => {
   isProcessing.value = true;
   // @ts-ignore
   window.electronAPI.installUpdate();
+};
+
+const formatErrorMessage = (err) => {
+  if (!err) return '';
+  const msg = typeof err === 'string' ? err : (err.message || JSON.stringify(err));
+  
+  if (msg.includes('404')) return 'No se encontró el archivo latest.yml o el instalador en GitHub. Verifica que estén subidos a la versión correcta.';
+  if (msg.includes('No published versions')) return 'Aún no hay ninguna versión (Release) publicada en tu repositorio de GitHub.';
+  if (msg.includes('app is not packed')) return 'Estás en modo desarrollo. Las actualizaciones solo funcionan en la versión instalada de la aplicación.';
+  if (msg.includes('HttpError')) return 'Ocurrió un problema de red al intentar conectar con GitHub. Verifica tu conexión.';
+  
+  return msg.length > 150 ? msg.substring(0, 150) + '...' : msg;
 };
 
 onMounted(async () => {
@@ -102,12 +114,17 @@ onMounted(async () => {
   if (window.electronAPI && window.electronAPI.onUpdaterMessage) {
     // @ts-ignore
     window.electronAPI.onUpdaterMessage((event, data) => {
-      statusData.value = { ...statusData.value, ...data };
+      const cleanedData = { ...data };
+      if (cleanedData.error) {
+        cleanedData.error = formatErrorMessage(cleanedData.error);
+      }
+      
+      statusData.value = { ...statusData.value, ...cleanedData };
       if (['not-available', 'error', 'downloaded'].includes(data.type)) {
         isProcessing.value = false;
       }
       if (data.type === 'available') {
-        isProcessing.value = false; // Permite dar click a descargar
+        isProcessing.value = false; 
       }
     });
   }
@@ -181,7 +198,17 @@ const formatBytes = (bytes, decimals = 2) => {
 .status-icon { margin-top: 0.2rem; }
 .status-message h4 { margin: 0 0 0.25rem 0; font-size: 1.1rem; }
 .status-message p { margin: 0; color: var(--text-dim); font-size: 0.9rem; }
-.error-text { color: #fca5a5 !important; margin-top: 0.5rem !important; }
+.error-text { 
+  color: #fca5a5 !important; 
+  margin-top: 0.5rem !important; 
+  font-size: 0.85rem !important; 
+  line-height: 1.4;
+  background: rgba(0,0,0,0.2);
+  padding: 0.5rem;
+  border-radius: 6px;
+  max-width: 100%;
+  word-break: break-word;
+}
 
 .spin { animation: spin 1.5s linear infinite; }
 @keyframes spin { 100% { transform: rotate(360deg); } }

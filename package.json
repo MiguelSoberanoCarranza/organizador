@@ -1,6 +1,6 @@
 {
   "name": "organizador-windows",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Smart File Organizer for Windows",
   "main": "dist/electron/main.js",
   "scripts": {
