@@ -44,8 +44,8 @@
       "publish": [
         {
           "provider": "github",
-          "owner": "TuUsuarioGithub",
-          "repo": "TuRepositorio"
+          "owner": "MiguelSoberanoCarranza",
+          "repo": "organizador"
         }
       ]
     },
