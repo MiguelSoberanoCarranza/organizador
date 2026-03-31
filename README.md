@@ -2,7 +2,6 @@
 
 **Organizer** es una aplicación de escritorio potente y minimalista para Windows diseñada para analizar, organizar y limpiar tus archivos de manera inteligente. Construida con tecnologías modernas para ofrecer un rendimiento excepcional y una interfaz de usuario premium.
 
-![Dashboard Preview](https://via.placeholder.com/800x450?text=Organizer+UI+Preview)
 
 ##  Características Principales
 
