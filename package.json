@@ -9,26 +9,26 @@
     "electron:dev": "vite"
   },
   "dependencies": {
-    "better-sqlite3": "^11.0.0",
+    "better-sqlite3": "^12.8.0",
     "electron-updater": "^6.8.3",
-    "lucide-vue-next": "^0.400.0",
-    "pinia": "^2.1.7",
+    "lucide-vue-next": "^1.0.0",
+    "pinia": "^3.0.4",
     "vue": "^3.4.21",
-    "vue-router": "^4.3.0"
+    "vue-router": "^5.0.4"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.0.4",
+    "@vitejs/plugin-vue": "^6.0.5",
     "concurrently": "^9.2.1",
     "cross-env": "^10.1.0",
-    "electron": "^29.1.5",
-    "electron-builder": "^24.13.3",
+    "electron": "^41.1.0",
+    "electron-builder": "^26.8.1",
     "electron-rebuild": "^3.2.9",
     "tsx": "^4.21.0",
-    "typescript": "^5.4.2",
-    "vite": "^5.1.6",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.3",
     "vite-plugin-electron": "^0.29.1",
     "vite-plugin-electron-renderer": "^0.14.6",
-    "vue-tsc": "^2.0.6",
+    "vue-tsc": "^3.2.6",
     "wait-on": "^9.0.4"
   },
   "build": {
