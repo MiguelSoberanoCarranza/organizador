@@ -5,6 +5,7 @@ import { ScannerService } from '../core/scanner/scanner';
 import { DuplicateService } from '../core/duplicates/duplicates';
 import fs from 'fs/promises';
 import { catalogService } from '../core/config/catalog';
+import { autoUpdater } from 'electron-updater';
 
 
 let mainWindow: BrowserWindow | null = null;
@@ -68,13 +69,66 @@ function createWindow() {
     mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL);
     mainWindow.webContents.openDevTools();
   } else {
-    mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
+    mainWindow.loadFile(path.join(__dirname, '../index.html'));
   }
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+    createWindow();
+    
+    autoUpdater.autoDownload = false;
+    
+    autoUpdater.on('checking-for-update', () => {
+        mainWindow?.webContents.send('updater-message', { type: 'checking', text: 'Buscando actualizaciones...' });
+    });
+    
+    autoUpdater.on('update-available', (info) => {
+        mainWindow?.webContents.send('updater-message', { type: 'available', text: 'Actualización disponible', info });
+    });
+    
+    autoUpdater.on('update-not-available', (info) => {
+        mainWindow?.webContents.send('updater-message', { type: 'not-available', text: 'El sistema está actualizado', info });
+    });
+    
+    autoUpdater.on('error', (err) => {
+        const errMessage = err == null ? 'Error desconocido' : (err.message || err);
+        mainWindow?.webContents.send('updater-message', { type: 'error', text: 'Error en la actualización', error: errMessage });
+    });
+    
+    autoUpdater.on('download-progress', (progressObj) => {
+        mainWindow?.webContents.send('updater-message', { type: 'progress', text: 'Descargando...', progress: progressObj });
+    });
+    
+    autoUpdater.on('update-downloaded', (info) => {
+        mainWindow?.webContents.send('updater-message', { type: 'downloaded', text: 'Descarga completada. Lista para instalar.', info });
+    });
+});
 
 // IPC Handlers
+ipcMain.handle('check-updates', async () => {
+    try {
+        await autoUpdater.checkForUpdates();
+    } catch (e) {
+        throw e;
+    }
+});
+
+ipcMain.handle('download-update', async () => {
+    try {
+        await autoUpdater.downloadUpdate();
+    } catch (e) {
+        throw e;
+    }
+});
+
+ipcMain.handle('install-update', () => {
+    autoUpdater.quitAndInstall();
+});
+
+ipcMain.handle('get-app-version', () => {
+    return app.getVersion();
+});
+
 ipcMain.handle('select-folder', async () => {
     const result = await dialog.showOpenDialog(mainWindow!, {
         properties: ['openDirectory']
@@ -184,6 +238,10 @@ ipcMain.handle('update-catalog', async (event, newCatalog) => {
         })();
     } catch (e) {
         console.error("Fallo actualizando tabla tras cambio de catálogo", e);
+    }
+
+    if (mainWindow) {
+        mainWindow.webContents.send('catalog-updated');
     }
 
     return { success: true };

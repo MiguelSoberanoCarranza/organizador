@@ -59,7 +59,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted, toRaw } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const catalog = ref<Record<string, string[]>>({});
 const newExtensions = ref<Record<string, string>>({});
 const isSaving = ref(false);
@@ -114,9 +116,9 @@ const saveCatalog = async () => {
     const rawCatalog = JSON.parse(JSON.stringify(toRaw(catalog.value)));
     await (window as any).electronAPI.updateCatalog(rawCatalog);
   }
-  setTimeout(() => {
-    isSaving.value = false;
-  }, 500);
+  isSaving.value = false;
+  alert("Catálogo actualizado. Los cambios ya se ven reflejados en tus archivos organizados.");
+  router.push('/scan');
 };
 </script>
 

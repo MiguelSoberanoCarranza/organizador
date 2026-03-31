@@ -3,14 +3,19 @@
     <main class="content">
       <header class="top-bar glass-header">
         <div class="header-left">
-          <div class="logo">Organizer <span>v1.0</span></div>
+          <div class="logo">
+            Organizer <span>v0.0.1 Beta</span>
+            <router-link to="/updates" class="update-icon-top tooltip-container" title="Buscar Actualizaciones">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.92-10.27l-3.26-1.5"></path><line x1="21.5" y1="8" x2="16" y2="8"></line></svg>
+            </router-link>
+          </div>
           <div class="separator"></div>
           <h1>{{ $route.name }}</h1>
         </div>
       </header>
       
       <div class="scrollable-area">
-        <router-view />
+        <router-view :key="reloadKey" />
       </div>
     </main>
 
@@ -52,12 +57,25 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
 import { useAppStore } from './stores/app'
 
 const store = useAppStore()
+const reloadKey = ref(0)
+
+onMounted(() => {
+    if (window.electronAPI && window.electronAPI.onCatalogUpdated) {
+        window.electronAPI.onCatalogUpdated(() => {
+            reloadKey.value++;
+            // Optionally refresh store stats if needed globally
+            store.refreshStats();
+        });
+    }
+})
 
 const startNewScan = async () => {
     await store.startScan()
+    reloadKey.value++
 }
 </script>
 
@@ -131,12 +149,40 @@ body {
   font-weight: 800;
   color: var(--accent);
   -webkit-app-region: no-drag;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .logo span { 
   font-size: 0.8rem; 
   color: #64748b; 
   font-weight: 600;
+}
+
+.update-icon-top {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 0.3rem;
+  margin-left: 0.3rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  -webkit-app-region: no-drag;
+}
+
+.update-icon-top:hover {
+  color: var(--text);
+  background: rgba(56, 189, 248, 0.15);
+  transform: translateY(-2px);
+}
+
+.update-icon-top.router-link-active {
+  color: var(--accent);
+  background: rgba(56, 189, 248, 0.2);
 }
 
 .scrollable-area {
@@ -203,15 +249,14 @@ body {
 }
 
 .router-link-active {
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.2) 0%, rgba(37, 99, 235, 0.2) 100%);
+  background: rgba(56, 189, 248, 0.1);
   color: var(--accent);
   border: 1px solid rgba(56, 189, 248, 0.2);
-  box-shadow: 0 4px 15px rgba(56, 189, 248, 0.2);
+  /* Se quitó el gradiente completo y resplandor agresivo de sombra */
 }
 
 .router-link-active svg {
-  transform: scale(1.15);
-  filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.6));
+  transform: scale(1.1);
 }
 
 /* Tooltip on Hover */

@@ -3,6 +3,7 @@ import Dashboard from '../views/Dashboard.vue'
 import Organizer from '../views/Organizer.vue'
 import FileExplorer from '../views/FileExplorer.vue'
 import Catalog from '../views/Catalog.vue'
+import Updates from '../views/Updates.vue'
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -26,6 +27,11 @@ const router = createRouter({
       path: '/catalog',
       name: 'Catálogo',
       component: Catalog
+    },
+    {
+      path: '/updates',
+      name: 'Actualizaciones',
+      component: Updates
     }
   ]
 })

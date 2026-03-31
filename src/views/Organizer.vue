@@ -6,12 +6,10 @@
     </header>
 
     <div class="category-grid">
-      <div v-for="(count, cat) in categories" :key="cat" class="cat-card">
-        <div class="cat-icon">{{ getIcon(cat) }}</div>
-        <div class="cat-info">
-          <h3>{{ cat }}</h3>
-          <span>{{ count }} archivos</span>
-        </div>
+      <div v-for="(count, cat) in categories" :key="cat" class="cat-card" :title="cat">
+        <span class="cat-icon">{{ getIcon(cat) }}</span>
+        <span class="cat-name">{{ cat }}</span>
+        <span class="cat-count">{{ count }}</span>
       </div>
     </div>
 
@@ -178,28 +176,28 @@ const getIcon = (cat) => {
 
 <style scoped>
 .organizer-view { padding-bottom: 4rem; }
-.subtitle { color: var(--text-dim); margin-top: 0.5rem; margin-bottom: 2rem; }
-.category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
-.cat-card { background: var(--bg-card); padding: 1.5rem; border-radius: 12px; border: 1px solid #334155; display: flex; align-items: center; gap: 1rem; }
-.cat-icon { font-size: 2rem; }
-.cat-info h3 { margin: 0; font-size: 1.1rem; }
-.cat-info span { font-size: 0.85rem; color: var(--text-dim); }
+.subtitle { color: var(--text-dim); margin-top: 0.2rem; margin-bottom: 0.5rem; font-size: 0.85rem; }
+.category-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+.cat-card { background: rgba(30, 41, 59, 0.5); padding: 0.3rem 0.6rem; border-radius: 20px; border: 1px solid #334155; display: flex; align-items: center; gap: 0.4rem; cursor: default; }
+.cat-icon { font-size: 1.1rem; }
+.cat-name { font-size: 0.75rem; color: #cbd5e1; font-weight: 500; }
+.cat-count { font-size: 0.7rem; color: #38bdf8; background: rgba(56, 189, 248, 0.1); padding: 2px 6px; border-radius: 10px; font-weight: 600;}
 
-.action-panel { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 2rem; border-radius: 16px; border: 1px solid var(--accent); position: relative; overflow: hidden; }
+.action-panel { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 1.25rem; border-radius: 12px; border: 1px solid var(--accent); position: relative; overflow: hidden; }
 .strategy-card h3 { margin-top: 0; }
 .empty-state { text-align: center; padding: 2rem; color: #94a3b8; }
 .empty-state h3 { color: #f1f5f9; margin-bottom: 0.5rem; }
-.warning-box { background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b; padding: 1rem; margin: 1.5rem 0; color: #fcd34d; font-size: 0.9rem; }
+.warning-box { background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b; padding: 0.75rem 1rem; margin: 1rem 0; color: #fcd34d; font-size: 0.85rem; }
 .btn-hero { width: 100%; padding: 1.2rem; font-size: 1.1rem; font-weight: 700; background: var(--accent); border-radius: 12px; transition: transform 0.2s; }
 .btn-hero:hover { transform: scale(1.02); background: #3b82f6; }
 
 .mini-history { margin-top: 3rem; }
 .history-item { font-size: 0.85rem; color: var(--text-dim); padding: 0.5rem 0; border-bottom: 1px dashed #334155; }
 
-.preview-table-container { max-height: 250px; overflow-y: auto; background: rgba(0,0,0,0.3); border-radius: 8px; margin: 1rem 0; font-size: 0.85rem; border: 1px solid #334155; }
+.preview-table-container { max-height: calc(100vh - 400px); min-height: 250px; overflow-y: auto; background: rgba(0,0,0,0.3); border-radius: 8px; margin: 1rem 0; font-size: 0.8rem; border: 1px solid #334155; }
 .preview-table { width: 100%; border-collapse: collapse; }
-.preview-table th { text-align: left; padding: 0.75rem; background: rgba(255,255,255,0.05); color: var(--text-dim); }
-.preview-table td { padding: 0.6rem 0.75rem; border-top: 1px solid #334155; }
+.preview-table th { text-align: left; padding: 0.5rem 0.75rem; background: rgba(255,255,255,0.05); color: var(--text-dim); }
+.preview-table td { padding: 0.4rem 0.75rem; border-top: 1px solid #334155; }
 .selected-row { background: rgba(56, 189, 248, 0.05); }
 .name-cell { font-family: monospace; color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px; }
 .size-cell { font-size: 0.8rem; color: var(--text-dim); text-align: right; padding-right: 1.5rem !important; }

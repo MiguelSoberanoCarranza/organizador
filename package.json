@@ -1,6 +1,6 @@
 {
   "name": "organizador-windows",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "Smart File Organizer for Windows",
   "main": "dist/electron/main.js",
   "scripts": {
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "better-sqlite3": "^11.0.0",
+    "electron-updater": "^6.8.3",
     "lucide-vue-next": "^0.400.0",
     "pinia": "^2.1.7",
     "vue": "^3.4.21",
@@ -29,5 +30,31 @@
     "vite-plugin-electron-renderer": "^0.14.6",
     "vue-tsc": "^2.0.6",
     "wait-on": "^9.0.4"
+  },
+  "build": {
+    "appId": "com.organizador.app",
+    "productName": "Organizer",
+    "directories": {
+      "output": "release/"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "publish": [
+        {
+          "provider": "github",
+          "owner": "TuUsuarioGithub",
+          "repo": "TuRepositorio"
+        }
+      ]
+    },
+    "files": [
+      "dist/**/*",
+      "package.json"
+    ],
+    "asarUnpack": [
+      "**/*.node"
+    ]
   }
 }

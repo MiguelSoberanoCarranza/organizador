@@ -21,5 +21,13 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getFolderContents: (path: string) => ipcRenderer.invoke('get-folder-contents', path),
   getRootPath: () => ipcRenderer.invoke('get-root-path'),
   onScanProgress: (callback: any) => ipcRenderer.on('scan-progress', callback),
-  onOrganizeProgress: (callback: any) => ipcRenderer.on('organize-progress', callback)
+  onOrganizeProgress: (callback: any) => ipcRenderer.on('organize-progress', callback),
+  onCatalogUpdated: (callback: any) => ipcRenderer.on('catalog-updated', callback),
+  
+  // Updates
+  checkUpdates: () => ipcRenderer.invoke('check-updates'),
+  downloadUpdate: () => ipcRenderer.invoke('download-update'),
+  installUpdate: () => ipcRenderer.invoke('install-update'),
+  onUpdaterMessage: (callback: any) => ipcRenderer.on('updater-message', callback),
+  getAppVersion: () => ipcRenderer.invoke('get-app-version')
 });
